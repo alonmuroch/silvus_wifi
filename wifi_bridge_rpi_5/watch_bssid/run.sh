@@ -1,33 +1,46 @@
 #!/bin/bash
 
-set -e  # Stop on first error
+# === CONFIGURATION ===
+SERVICE_NAME="watch_bssid"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_PATH="${SCRIPT_DIR}/main.py"
+PYTHON_EXEC="/usr/bin/python3"
+SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 
-# Define a name for the image
-IMAGE_NAME="bssid-watcher"
+# === VALIDATION ===
+if [ ! -f "$SCRIPT_PATH" ]; then
+  echo "Error: Python script not found at $SCRIPT_PATH"
+  exit 1
+fi
 
-# Go to script directory (optional, if running from crontab or systemd)
-cd "$(dirname "$0")"
+# === CREATE SYSTEMD SERVICE FILE ===
+echo "Creating systemd service file at $SERVICE_FILE..."
 
-echo "🛠 Building Docker image..."
-docker build -t "$IMAGE_NAME" .
+sudo bash -c "cat > $SERVICE_FILE" <<EOL
+[Unit]
+Description=Watch BSSID Script
+After=network.target
 
-echo "🧹 Cleaning up existing container (if any)..."
-docker rm -f "$IMAGE_NAME" 2>/dev/null || true
+[Service]
+ExecStart=${PYTHON_EXEC} ${SCRIPT_PATH}
+WorkingDirectory=${SCRIPT_DIR}
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=5
 
-echo "🚀 Running the container..."
-docker run \
-  --group-add gpio \
-  --device /dev/gpiochip0 \
-  --device /dev/gpiochip4 \
-  --device /dev/gpiochip10 \
-  --device /dev/gpiochip11 \
-  --device /dev/gpiochip12 \
-  --device /dev/gpiochip13 \
-  -v /proc/cpuinfo:/proc/cpuinfo:ro \
-  -v /sys:/sys \
-  --name "$IMAGE_NAME" \
-  --restart unless-stopped \
-  -d \
-  "$IMAGE_NAME:latest"
+[Install]
+WantedBy=multi-user.target
+EOL
 
+# === APPLY CHANGES ===
+echo "Reloading systemd daemon..."
+sudo systemctl daemon-reexec
 
+echo "Enabling service to start on boot..."
+sudo systemctl enable ${SERVICE_NAME}.service
+
+echo "Starting the service now..."
+sudo systemctl start ${SERVICE_NAME}.service
+
+echo "Done. Use 'sudo systemctl status ${SERVICE_NAME}.service' to check the status."

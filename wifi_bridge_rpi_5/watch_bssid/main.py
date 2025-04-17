@@ -67,27 +67,29 @@ def stop_blinking_and_clear():
 def get_bssid_and_rssi():
     try:
         result = subprocess.run(
-            ['iw', 'dev', 'wlan0', 'link'],
+            ['nmcli', '-t', '-f', 'ACTIVE,BSSID,SIGNAL', 'dev', 'wifi'],
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             text=True
         )
-        logging.info(result)
+
+        if result.returncode != 0:
+            return f"nmcli error: {result.stderr.strip()}", None
+
         lines = result.stdout.strip().splitlines()
-        bssid, rssi = None, None
-
         for line in lines:
-            if "Connected to" in line:
-                bssid = "BSSID: " + line.split("Connected to")[-1].strip()
-            elif "signal:" in line:
-                match = re.search(r'-\d+', line)
-                if match:
-                    rssi = int(match.group(0))
+            # Match: active flag, full BSSID (may include '\:'), signal
+            # Use regex to capture everything between the first two ':' and last
+            match = re.match(r'yes:(.*):(\d+)$', line)
+            if match:
+                bssid_escaped = match.group(1)
+                rssi = int(match.group(2))
+                # unescape the '\:' back to ':'
+                bssid = "BSSID: " + bssid_escaped.replace(r'\:', ':')
+                return bssid, -1*rssi
 
-            if bssid and rssi is not None:
-                break
+        return "No active Wi-Fi connection", None
 
-        return bssid, rssi
     except Exception as e:
         return f"Error: {e}", None
 
