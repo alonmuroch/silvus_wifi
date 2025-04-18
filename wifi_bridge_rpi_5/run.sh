@@ -10,9 +10,8 @@ sudo apt install -y \
   parprouted \
   dhcp-helper \
   dhcpcd \
-  systemd-resolved 
-
-pip install gpiozero
+  systemd-resolved \
+  python3-gpiozero
 
 echo "✅ Dependencies installed."
 

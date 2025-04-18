@@ -43,4 +43,12 @@ sudo systemctl enable ${SERVICE_NAME}.service
 echo "Starting the service now..."
 sudo systemctl start ${SERVICE_NAME}.service
 
-echo "Done. Use 'sudo systemctl status ${SERVICE_NAME}.service' to check the status."
+echo
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "DONE!"
+echo "➡️  Use 'sudo systemctl status ${SERVICE_NAME}.service' to check the status."
+echo "➡️  Use 'sudo journalctl -u ${SERVICE_NAME}.service -f' to see logs."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+
+
