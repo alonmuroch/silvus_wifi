@@ -21,9 +21,3 @@ password: 12345678
 	cd Desktop/wifi_bridge_rpi_5 && sudo sh run.sh
 ```
 
-# IP table
-| Device            | IP                 | Detail                               |
-|-------------------|--------------------|--------------------------------------|
-| RPI LAN interface | 192.168.68.50      | Internal, not exposed to the network |
-| CAM               | 192.168.68.125-150 | Exposed to the entire network        |
-| Silvus            | 192.168.68.150-200 | Exposed to the entire network        |
