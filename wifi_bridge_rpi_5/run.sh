@@ -11,7 +11,8 @@ sudo apt install -y \
   dhcp-helper \
   dhcpcd \
   systemd-resolved \
-  python3-gpiozero
+  python3-gpiozero \
+  tcpdump
 
 echo "✅ Dependencies installed."
 
