@@ -7,10 +7,6 @@ sudo apt update
 
 echo "🔄 Installing dependencies..."
 sudo apt install -y \
-  parprouted \
-  dhcp-helper \
-  dhcpcd \
-  systemd-resolved \
   python3-gpiozero \
   tcpdump
 

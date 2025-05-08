@@ -21,3 +21,20 @@ password: 12345678
 	cd Desktop/wifi_bridge_rpi_5 && sudo sh run.sh
 ```
 
+
+# Manual routes for Silvus admin
+On Linux/macOS
+--------------
+Add route:
+    sudo route add -net 172.20.0.0/16 gw 192.168.1.10
+
+Remove route:
+    sudo route delete -net 172.20.0.0/16 gw 192.168.1.10
+
+On Windows (Command Prompt as Administrator)
+-------------------------------------------
+Add route:
+    route ADD 172.20.0.0 MASK 255.255.0.0 192.168.1.10
+
+Remove route:
+    route DELETE 172.20.0.0
