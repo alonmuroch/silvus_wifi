@@ -27,11 +27,6 @@ make clean
 echo "🔨 Building the project..."
 make
 
-# Optional: Set SUID-root on supernode (not needed, runs as regular user)
-# echo "🔒 Setting SUID-root on supernode (optional)..."
-# sudo chown root:root supernode
-# sudo chmod +s supernode
-
 echo "📝 Creating systemd service for supernode..."
 
 SERVICE_PATH="/etc/systemd/system/supernode.service"
@@ -61,19 +56,22 @@ echo "🚀 Starting supernode..."
 sudo systemctl start supernode
 
 echo "🌐 Configuring static IP for wlan interface via NetworkManager..."
-CON_NAME="wifi-static"
 IFACE_NAME="wlan0"
-STATIC_IP="192.168.68.201/16"
-GATEWAY="192.168.68.1"
+read -p "📥 Enter static IP to assign to wlan0 (e.g., 192.168.50.201/16): " STATIC_IP
+GATEWAY="192.168.50.1"
 DNS="1.1.1.1"
-SSID="blox"
-WIFI_PASSWORD="B1l2o3x4"
 
-nmcli con delete "$CON_NAME" 2>/dev/null || true
-nmcli con add type wifi ifname "$IFACE_NAME" con-name "$CON_NAME" autoconnect yes ssid "$SSID"
+# Find the active connection for wlan0
+CON_NAME=$(nmcli -g NAME,DEVICE con show --active | grep "$IFACE_NAME" | cut -d: -f1)
+
+if [ -z "$CON_NAME" ]; then
+  echo "❌ No active connection found on $IFACE_NAME. Please connect Wi-Fi first."
+  exit 1
+fi
+
+echo "⚙️ Modifying connection '$CON_NAME' to set static IP $STATIC_IP..."
+
 nmcli con modify "$CON_NAME" ipv4.method manual ipv4.addresses "$STATIC_IP" ipv4.gateway "$GATEWAY" ipv4.dns "$DNS"
-nmcli con modify "$CON_NAME" wifi-sec.key-mgmt wpa-psk
-nmcli con modify "$CON_NAME" wifi-sec.psk "$WIFI_PASSWORD"
 nmcli con up "$CON_NAME"
 
 echo "✅ Supernode is now running!"
