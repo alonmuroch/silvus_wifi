@@ -45,7 +45,9 @@ echo "🧹 Flushing old NAT rules..."
 sudo iptables -t nat -F
 
 echo "🌐 Applying MASQUERADE NAT on $WIFI_IFACE..."
-sudo iptables -t nat -A POSTROUTING -o "$WIFI_IFACE" -p udp --dport 9000 -j MASQUERADE
+sudo iptables -t nat -A POSTROUTING -o "$WIFI_IFACE" -j MASQUERADE
+sudo iptables -t nat -A PREROUTING -i "$WIFI_IFACE" -p tcp --dport 8554 -j DNAT --to-destination 172.20.10.1:554
+sleep 5 # make sure rules saved before persisting 
 
 echo "💾 Saving iptables rules persistently..."
 sudo netfilter-persistent save
