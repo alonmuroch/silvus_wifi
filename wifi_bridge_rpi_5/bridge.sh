@@ -26,6 +26,15 @@ sudo sed -i '/^#net.ipv4.ip_forward=1/s/^#//' "$SYSCTL_CONF"
 sudo sed -i '/^net.ipv4.ip_forward=0/s/0/1/' "$SYSCTL_CONF" || true
 
 
+# Install iptables if missing
+if ! command -v iptables >/dev/null; then
+  echo "📦 Installing iptables..."
+  sudo apt update
+  sudo apt install -y iptables
+else
+  echo "✅ iptables already installed."
+fi
+
 echo "📝 Writing iptables rule script..."
 sudo tee /usr/local/sbin/${SERVICE_NAME}.sh > /dev/null <<EOF
 #!/bin/bash

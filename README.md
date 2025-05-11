@@ -1,4 +1,42 @@
-# Network Setup
+# Silvus WiFi
+
+Silvus WiFi is a project aimed at enabling Silvus radios to operate over WiFi in addition to their native RF links. This is accomplished using a combination of Layer 2 networking and VPN tunneling via N2N.
+
+## 🛠️ Overview
+Silvus radios primarily operate on Layer 2 frames, which makes bridging them over standard WiFi networks a complex task. Fortunately, Silvus devices support N2N VPN, which we leverage to tunnel traffic over WiFi networks while maintaining seamless communication.
+
+## 📶 Network Topology
+```arduino
+Silvus Radio ⇄ Raspberry Pi ⇄ WiFi ⇄ N2N VPN Server
+```
+Each Raspberry Pi (RPI) acts as a lightweight router that:
+
+* Forwards and masquerades Layer 2+ traffic from the Silvus radio
+* Establishes a secure N2N VPN tunnel
+* Provides basic IP routing over WiFi networks
+
+## 📺 IP Camera Streaming
+In addition to handling Silvus traffic, each RPI instance also:
+
+Forwards port 8554 to 172.20.10.1:554, enabling RTSP streams from IP cameras over the VPN.
+
+## 🌐 Network Configuration
+* The Raspberry Pi obtains its IP address via DHCP
+* mDNS is used for local hostname resolution using the format:
+
+```bash
+rpi<number>.local
+```
+
+For example, an RPI with index 3 can be accessed as rpi3.local on the local network.
+
+## Install
+### Client
+
+```
+scp -r wifi_bridge_rpi_5 admin@rpi0.local:/home/admin/Desktop
+sudo sh run.sh
+```
 
 ## Wifi Mesh
 Deco M9
@@ -8,7 +46,7 @@ Deco M9
 - Fast roaming on 
 - SSID: BBB:12345678
 
-# IP table
+## IP table
 | Device            | IP                 | Detail                               |
 |-------------------|--------------------|--------------------------------------|
 | RPI LAN interface | 172.20.0.1      | Internal, not exposed to the network |
@@ -16,7 +54,7 @@ Deco M9
 | CAM               | 172.20.10.x | Exposed to the entire network, needs to be reserved in the Deco DHCP server        |
 | Silvus            | 172.20.x.x | Exposed to the entire network        |
 
-# Commom commands
+## Commom commands
 Systemd service status
 ``` 
 sudo systemctl status <supernode, watch_bssid>
@@ -47,7 +85,7 @@ sudo raspi-config
 
 
 
-# Expected iptables
+## Expected iptables
 Chain PREROUTING (policy ACCEPT 23901 packets, 2772K bytes)
  pkts bytes target     prot opt in     out     source               destination         
     0     0 DNAT       6    --  wlan0  *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8554 to:172.20.10.1:554
