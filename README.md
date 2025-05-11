@@ -34,6 +34,12 @@ iptabels
 ``` sudo iptables -t nat -L -n -v
 ```
 
+RPI config
+``` sudo raspi-config
+```
+
+
+
 
 
 # Expected iptables
