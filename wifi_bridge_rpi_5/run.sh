@@ -15,8 +15,12 @@ echo "✅ Dependencies installed."
 echo "🔁 Executing bridge setup and rebooting..."
 sudo sh bridge.sh
 
-echo "🚀 Running BSSID watcher container..."
+echo "🚀 Running BSSID watcher systemd process..."
 sudo sh watch_bssid/run.sh
+
+echo "🚀 Running Silvus Connector watcher systemd process..."
+sudo sh silvus_connector/run.sh
+
 
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
