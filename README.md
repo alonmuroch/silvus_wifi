@@ -18,24 +18,29 @@ Deco M9
 
 # Commom commands
 Systemd service status
-``` sudo systemctl status <supernode, watch_bssid>
+``` 
+sudo systemctl status <supernode, watch_bssid>
 ```
 
 TCP dump for N2N messages
-``` sudo tcpdump -i any port 9000
+``` 
+sudo tcpdump -i any port 9000
 ```
 
 Systemd processes 
-``` systemctl status watch_bssid.service
-	systemctl status silvus_connector.service
+``` 
+systemctl status watch_bssid.service
+systemctl status silvus_connector.service
 ```
 
 iptabels
-``` sudo iptables -t nat -L -n -v
+``` 
+sudo iptables -t nat -L -n -v
 ```
 
 RPI config
-``` sudo raspi-config
+``` 
+sudo raspi-config
 ```
 
 
