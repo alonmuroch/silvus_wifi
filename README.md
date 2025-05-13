@@ -50,9 +50,26 @@ Deco M9
 | Device            | IP                 | Detail                               |
 |-------------------|--------------------|--------------------------------------|
 | RPI LAN interface | 172.20.0.1      | Internal, not exposed to the network |
-| RPI N2N Master Node | 192.168.50.201      | Exposed to the entire network |
+| RPI WAN interface | 192.168.68.x/16      | Internal, not exposed to the network |
+| RPI N2N Master Node | 192.168.68.201/16      | Exposed to the entire network |
 | CAM               | 172.20.10.x | Exposed to the entire network, needs to be reserved in the Deco DHCP server        |
 | Silvus            | 172.20.x.x | Exposed to the entire network        |
+
+
+## Operational WiFi RPI static IPs
+| RPI            | IP                 | 
+|-------------------|--------------------|
+| 0 | 192.168.68.5/16       | 
+| 1 | 192.168.68.6/16       | 
+| 2 | 192.168.68.7/16       | 
+| 3 | 192.168.68.8/16       | 
+| 4 | 192.168.68.9/16       | 
+| 5 | 192.168.68.10/16       | 
+| 6 | 192.168.68.11/16       | 
+| 7 | 192.168.68.12/16       | 
+| 8 | 192.168.68.13/16       | 
+| 9 | 192.168.68.14/16       | 
+
 
 ## Commom commands
 Systemd service status
@@ -67,8 +84,13 @@ sudo tcpdump -i any port 9000
 
 Systemd processes 
 ``` 
-systemctl status watch_bssid.service
-systemctl status silvus_connector.service
+sudo systemctl status watch_bssid.service
+sudo systemctl restart watch_bssid.service
+sudo journalctl -u watch_bssid.service -f
+
+sudo systemctl status silvus_connector.service
+sudo systemctl restart silvus_connector.service
+sudo journalctl -u silvus_connector.service -f
 ```
 
 iptabels
@@ -79,6 +101,7 @@ sudo iptables -t nat -L -n -v
 RPI config
 ``` 
 sudo raspi-config
+sudo sudo nmtui
 ```
 
 

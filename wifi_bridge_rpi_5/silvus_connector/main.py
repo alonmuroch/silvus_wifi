@@ -10,7 +10,7 @@ import struct
 from silvus_api import configure_virtual_ip_sequence
 
 INTERFACE = "eth0"
-TARGET_IP = "192.168.50.201"
+TARGET_IP = "192.168.68.201"
 SNIFF_TIMEOUT = 5  # seconds
 
 tracking_devices = {}
