@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from scapy.all import sniff, IP, UDP, Ether
+import os 
 import threading
 import time
 import signal
@@ -11,7 +12,7 @@ import subprocess
 from silvus_api import configure_virtual_ip_sequence, refresh_ptt_settings
 
 INTERFACE = "eth0"
-TARGET_IP = "192.168.68.201"
+TARGET_IP = os.environ.get("N2N_SUPERNODE_URL", "192.168.68.5")
 SNIFF_TIMEOUT = 5  # seconds
 TIMEOUT_SECONDS = 15  # seconds for cleanup
 
@@ -152,7 +153,7 @@ def signal_handler(sig, frame):
 
 def main():
     global stop_sniffing
-    log(f"[+] Sniffing all UDP traffic on {INTERFACE}...\n")
+    log(f"[+] Sniffing all UDP traffic on {INTERFACE} for comms with {TARGET_IP}...\n")
     signal.signal(signal.SIGINT, signal_handler)
 
     while not stop_sniffing:

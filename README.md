@@ -51,7 +51,7 @@ Deco M9
 |-------------------|--------------------|--------------------------------------|
 | RPI LAN interface | 172.20.0.1      | Internal, not exposed to the network |
 | RPI WAN interface | 192.168.68.x/16      | Internal, not exposed to the network |
-| RPI N2N Master Node | 192.168.68.201/16      | Exposed to the entire network |
+| RPI N2N Master Node | same as RPI0 (see below)      | Exposed to the entire network |
 | CAM               | 172.20.10.x | Exposed to the entire network, needs to be reserved in the Deco DHCP server        |
 | Silvus            | 172.20.x.x | Exposed to the entire network        |
 
@@ -79,7 +79,7 @@ sudo systemctl status <supernode, watch_bssid>
 
 TCP dump for N2N messages
 ``` 
-sudo tcpdump -i any port 9000
+sudo tcpdump -i wlan0 udp port 9000
 ```
 
 Systemd processes 

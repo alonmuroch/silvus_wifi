@@ -1,5 +1,8 @@
 import requests
 
+import os
+VPN_ADDRESS = os.environ.get("N2N_SUPERNODE_URL", "192.168.68.5")
+
 def configure_virtual_ip_sequence(radio_ip: str, virtual_ip_disable: str = "0"):
     """
     Sends a single batch JSON-RPC request to configure the virtual IP and VPN settings.
@@ -9,7 +12,7 @@ def configure_virtual_ip_sequence(radio_ip: str, virtual_ip_disable: str = "0"):
     batch_payload = [
         {"jsonrpc": "2.0", "method": "virtual_ip_disable", "id": 1, "params": [virtual_ip_disable]},
         {"jsonrpc": "2.0", "method": "virtual_ip_gateway", "id": 2, "params": ["172.20.0.1"]},
-        {"jsonrpc": "2.0", "method": "vpn_address", "id": 3, "params": ["192.168.68.201", "9000"]},
+        {"jsonrpc": "2.0", "method": "vpn_address", "id": 3, "params": [VPN_ADDRESS, "9000"]},
         {"jsonrpc": "2.0", "method": "vpn_disable", "id": 4, "params": ["0"]},
         {"jsonrpc": "2.0", "method": "setenvlinsingle", "id": 5, "params": ["virtual_ip_disable"]},
         {"jsonrpc": "2.0", "method": "setenvlinsingle", "id": 6, "params": ["virtual_ip_gateway"]},

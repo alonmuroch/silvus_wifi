@@ -21,6 +21,9 @@ sudo sh watch_bssid/run.sh
 echo "🚀 Running Silvus Connector watcher systemd process..."
 sudo sh silvus_connector/run.sh
 
+echo "🚀 Setting static IP..."
+sudo sh static_ip.sh
+
 
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
